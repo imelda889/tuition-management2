@@ -1,0 +1,3 @@
+#Format: Name, Student ID, Current Subjects, Subject to Remove, Subject to Add, Status
+Sara Lim,sara_lim2,Mathematics;History;Science,History,Chinese,Pending
+Adam Tan,Adam_tan1,History;Geographics;Mathematics,History,None,Pending

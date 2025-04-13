@@ -1,0 +1,20 @@
+Form1-5,English,January,5000
+Form1-5,English,February,4500
+Form1-5,Mathematics,January,6000
+Form1-5,Mathematics,February,5500
+Form1-5,Science,January,5500
+Form1-5,Science,February,5000
+Form4-5,Physics,January,7000
+Form4-5,Physics,February,6500
+Form4-5,Chemistry,January,6500
+Form4-5,Chemistry,February,6000
+Form4-5,Biology,January,6000
+Form4-5,Biology,February,5500
+Form4-5,Additional Mathematics,January,7500
+Form4-5,Additional Mathematics,February,7000
+Form4-5,Computer Science,January,8000
+Form4-5,Computer Science,February,7500
+Form4-5,Business,January,7000
+Form4-5,Business,February,6500
+Form1-5,Chinese,January,5500
+Form1-5,Chinese,February,5000

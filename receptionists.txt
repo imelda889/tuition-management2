@@ -1,0 +1,17 @@
+#Format: receptionist name, password, role
+Mr. Lee,password123,Receptionist
+Mr. Bryan,pass456,Receptionist
+Ms. Catherine,secure789,Receptionist
+Mr. David,recept555,Receptionist
+Ms. Emily,hello999,Receptionist
+Mr. Hyunjin,ade893,Receptionist
+Ms. Grace,safe111,Receptionist
+Mr. Henry,front333,Receptionist
+Ms. Ivy,desk555,Receptionist
+Mr. Jack,entry666,Receptionist
+Ms. Kelly,gate888,Receptionist
+Mr. Leo,staff777,Receptionist
+Ms. Monica,admin000,Receptionist
+Mr. Nathan,door999,Receptionist
+Ms. Olivia,assist444,Receptionist
+Mr. Tan,abc1234,Receptionist

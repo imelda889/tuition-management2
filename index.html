@@ -1,0 +1,1365 @@
+import os
+import matplotlib.pyplot as plt
+import colorama
+import getpass
+import sys
+from pyfiglet import Figlet
+import pwinput
+import time
+from tqdm import tqdm
+from datetime import datetime
+from colorama import Fore, Style, init
+init(autoreset=True)  # Automatically resets color after each print
+
+#save data
+#admin
+admin_file = "admin.txt"
+tutors_file = "tutors.txt"
+receptionists_file = "receptionists.txt"
+income_file = "income.txt"
+
+#receptionist
+students_file = "students.txt"
+
+#tutors
+class_information_file = "class_information.txt"
+
+#students
+change_requests_file = "change_requests.txt"
+LOGIN_LOGS_FILE = "login_logs.txt"
+class_information_file = "class_information.txt"
+students_file = "students.txt"
+
+def load_data(filename):
+    try:
+        with open(filename, 'r') as file:
+            return [line.strip().split(',') for line in file]
+    except FileNotFoundError:
+        print(f"File {filename} not found. Creating a new one.")
+        return []
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+
+def save_data(filename, data):
+    try:
+        with open(filename, 'w') as file:
+            for entry in data:
+                file.write(','.join(entry) + '\n')
+    except Exception as e:
+        print(f"An error occurred while saving data: {e}")
+
+
+#introduction
+def intro():
+    print(Fore.LIGHTRED_EX + " 🎉 Welcome to Brilliant Tuition Centre(BTC) Management System ✨ ")
+
+
+## Additional featuers: Show credits
+def show_credits():
+    print("\033[1m\n============ 📖 About This System ============\033[0m")
+    print(Fore.CYAN + """
+    Welcome to the Brilliant Tuition Centre Management System!
+
+    👩‍💻 Developed by: [Chong Xin Yi, Hwong Yong Bing, Hiew Yi Hwa, Jashan A/L BALAMURUGESHWARAN]
+    🧑‍🏫 Directed by: Mr. Usman Hashmi           
+    🎓 For: Diploma Year 1 Python Assignment
+    🏫 University: Asia Pacific University of Technology and Innovation (APU)      
+    📅 Date: April 2025
+    📌 Features:
+            
+    - Admin       : Manage tutor, student and receptionist records
+    - Receptionist: Handle student registrations and payments
+    - Tutor       : View student information and progress, handle class schedule         
+    - Student     : Submit subject change requests and make payments 
+
+    👑 System Highlights: 
+            
+    • Simple and user-friendly text interface
+    • Secure password inputs using “pwinput”
+    • Neat printed receipts and subject listings  
+    • Colored text output for better visibility using “colorama”
+    • Data stored and read from text files (CSV format logic)        
+                        
+
+    Thank you for using the system! 💙
+        """)
+    print(Fore.MAGENTA + "✨ Coding is fun! ✨")
+    print("")
+
+    input("Press Enter (back to Main Menu) .... ")
+## End Show credits
+
+
+#-------------------------------------------ADMIN PART-------------------------------------------------------------------
+def slow_print(text, delay=0.05):
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()  # Move to next line after printing
+
+
+
+def show_lock_screen():
+    lock_ascii = r"""
+    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀
+    ⠀⠀⠀⠀⢀⣀⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣤⣀⡀⠀⠀⠀
+    ⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡀⠀
+    ⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣆
+    ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
+    ⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇
+    ⠈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁
+    ⠀⠸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀
+    ⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀
+    ⠀⠀⠀⠀⠙⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠋⠀⠀⠀⠀
+    ⠀⠀⠀⠀⠀⠀⠀⠉⠛⠻⠿⠿⠿⠿⠿⠿⠿⠿⠟⠛⠉⠀⠀⠀⠀⠀⠀⠀
+    """
+    print(Fore.RED + lock_ascii)
+    print(Fore.YELLOW + "\nTOO MANY FAILED ATTEMPTS!")
+    print(Fore.WHITE + "System locked for 10 seconds...")
+    time.sleep(10)
+    print(Fore.GREEN + "\nYou may try again now.\n")
+
+
+# Admin Login
+def admin_login():
+    ascii_admin_banner()
+    print(Fore.MAGENTA + "\n--- Admin Login ---")
+    attempts = 3  # Total login attempts
+   
+    
+    while attempts > 0:  
+        adminname = input(Fore.BLUE + "👤Enter Adminname: ")
+        password =getpass.getpass(Fore.BLUE + "🔑Enter Password (Hidden): ")
+
+               
+        # Load admin data
+        Admin = load_data(admin_file)  
+        for admin, passw, role in Admin:
+            if adminname == admin and password == passw:
+                print(Fore.GREEN + f"Login Successful! Welcome, {role}.")
+                return role
+            
+        # If no match is found, decrease attempts
+        attempts -= 1 
+        print(Fore.RED + f"Invalid credentials. {attempts} attempts left.")
+    
+    # If all attempts are exhausted
+    print(Fore.RED + "Too many failed attempts. Exiting...")
+    show_lock_screen()
+    return None
+
+def ascii_admin_banner():
+   
+    ascii_art = f"""{Fore.LIGHTGREEN_EX}
+     █████╗ ██████╗ ███╗   ███╗██╗███╗   ██╗ ███████╗██╗   ██╗███████╗████████╗███████╗███╗   ███╗ 
+    ██╔══██╗██╔══██╗████╗ ████║██║████╗  ██║ ██╔════╝╚██╗ ██╔╝██╔════╝╚══██╔══╝██╔════╝████╗ ████║
+    ███████║██   ██║██╔████╔██║██║██╔██╗ ██║ ███████╗ ╚████╔╝ ███████╗   ██║   █████╗  ██╔████╔██║
+    ██╔══██║██   ██║██║╚██╔╝██║██║██║╚██╗██║ ╚════██║  ╚██╔╝  ╚════██║   ██║   ██╔══╝  ██║╚██╔╝██║
+    ██║  ██║██████╔╝██║ ╚═╝ ██║██║██║ ╚████║ ███████║   ██║   ███████║   ██║   ███████╗██║ ╚═╝ ██║
+    ╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝ ╚══════╝   ╚═╝   ╚══════╝   ╚═╝   ╚══════╝╚═╝     ╚═╝
+{Style.RESET_ALL}
+"""
+    slow_print(ascii_art, delay=0.001)
+
+# Create tutor
+def create_tutor():
+    name = input( Fore.BLUE+"Enter tutor name: ")
+    password = input(Fore.BLUE+"🔑Enter tutor password: ")
+    tutors = load_data(tutors_file)
+    if any(tutor[0] == name for tutor in tutors):
+        print(Fore.RED+"Tutor already exists.")
+        return
+    level = input(Fore.BLUE+"Enter tutor level(e.g., Form1-5): ")
+    subject = input(Fore.BLUE+"Enter Subject:")
+    role = "Tutor"
+    tutors.append([name, password, level, subject, role])
+    save_data(tutors_file, tutors)
+    print(Fore.GREEN+"Tutor added successfully.")
+
+# Delete tutor
+def delete_tutor():
+    name = input(Fore.BLUE+"Enter tutor name to delete: ")
+    tutors = load_data(tutors_file)
+
+    if not any(t[0] == name for t in tutors):
+        print("Tutor not found.")
+        return
+    
+    tutors = [t for t in tutors if t[0] != name]
+    save_data(tutors_file, tutors)
+    print(Fore.GREEN+"Tutor deleted successfully.")
+
+
+# Create receptionist
+def create_receptionist():
+    name = input(Fore.BLUE+"Enter receptionist name: ")
+    password = input(Fore.BLUE+"🔑Enter receptionist password: ")
+    role = "Receptionist"
+    receptionists = load_data(receptionists_file)
+    if any( r[0] == name for r in receptionists):
+        print("Receptionist already exists.")
+        return
+    receptionists.append([name, password, role])
+    save_data(receptionists_file, receptionists)
+    print(Fore.GREEN+"Receptionist added successfully.")
+
+# Delete receptionist
+def delete_receptionist():
+    name = input(Fore.BLUE+"Enter receptionist name to delete: ")
+    receptionists = load_data(receptionists_file)
+
+    if not any(r[0] == name for r in receptionists):
+        print(Fore.LIGHTRED_EX+"Receptionist not found.")
+        return
+    
+    receptionists = [r for r in receptionists if r[0] != name]
+    save_data(receptionists_file, receptionists)
+    print(Fore.GREEN+"Receptionist deleted successfully.")
+
+# Create admin
+def create_admin():
+    name = input(Fore.BLUE+"👤Enter admin name: ")
+    while True:
+        password = input(Fore.BLUE+"🔑Enter admin password: ")
+        strength = check_password_strength(password)
+        print(strength)
+        if "Strong" in strength:
+            break
+        else:
+            print(Fore.RED+"Please try again.")
+    role = "Admin"
+    admins = load_data(admin_file)
+    if any(admin[0] == name for admin in admins):
+        print("Admin already exists.")
+        return
+    admins.append([name, password, role])
+    save_data(admin_file, admins)
+    print("Admin added successfully.")
+
+
+#Password strength checker
+def check_password_strength(password):
+    if len(password) < 8:
+        return "Weak: Password must be at least 8 characters long."
+    elif not any(char.isdigit() for char in password):
+        return "Weak: Password must contain at least one number."
+    elif not any(char.isupper() for char in password):
+        return "Weak: Password must contain at least one uppercase letter."
+    else:
+        return "Strong: Password meets all requirements."
+
+# Delete admin
+def delete_admin():
+    name = input("Enter admin name to delete: ")
+    admins = load_data(admin_file)
+
+    if not any(a[0] == name for a in admins):
+        print("Admin not found.")
+        return
+    
+    admins = [a for a in admins if a[0] != name]
+    save_data(admin_file, admins)
+    print("Admin deleted successfully.")
+
+
+
+# View income report
+def view_income_report():
+    income_data = load_data(income_file)
+    
+    if not income_data:
+        print("No income data available.")
+        return
+
+    level_input = input("Enter level to filter (e.g., Form1-5): ")
+    subject_input = input("Enter subject to filter: ")
+
+    total_income = 0
+    filtered_data = []
+    print(f"\n📊 Income Report for {level_input}, {subject_input} 📊")
+    print("---------------------------------")
+
+    for entry in income_data:
+        income_level, income_subject, month, amount = entry
+
+        if level_input in income_level and subject_input == income_subject:
+            print(f"Month: {month}, Income: RM{amount}")
+            total_income += int(amount)
+            filtered_data.append(entry)
+
+    print("---------------------------------")
+    print(f"Total Income: RM{total_income}")
+
+    # Ask user if they want to see the chart
+    if filtered_data:
+        show_chart = input("\nWould you like to view a chart of this data? (y/n): ").lower()
+        if show_chart == 'y':
+            plot_income_chart(filtered_data)
+    else:
+        print("No matching data found for the specified filters.")
+
+
+def plot_income_chart(income_data):
+    if not income_data:
+        print("No data to visualize.")
+        return
+
+    months = [record[2] for record in income_data]  # month is at index 2
+    amounts = [float(record[3]) for record in income_data]  # amount is at index 3
+
+    plt.figure(figsize=(10, 5))
+    plt.bar(months, amounts, color='skyblue')
+    plt.title(f"Income by Month\n(Filtered Data)")
+    plt.xlabel("Month")
+    plt.ylabel("Income (RM)")
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
+
+# Update admin profile
+def update_admin_profile():
+    admins = load_data(admin_file)
+    print("Current Admins:")
+    for i, admin in enumerate(admins):
+        print(f"{i+1}. {admin[0]}")
+
+    choice = int(input("Enter the number of the admin to update: ")) - 1
+    if 0 <= choice < len(admins):
+        new_adminname = input(Fore.BLUE+ "Enter new adminname: ")
+        new_password = input(Fore.BLUE+"Enter new password: ")
+        admins[choice] = [new_adminname, new_password, "Admin"]
+        save_data(admin_file, admins)
+        print(Fore.GREEN + "Admin profile updated.")
+    else:
+        print(Fore.LIGHTRED_EX + "Invalid choice.")
+
+
+#Main Logic
+# Admin menu
+def admin_menu():
+    if not admin_login():
+        return
+    
+    while True:
+        print(Fore.MAGENTA + "\nAdmin Menu:")
+        print(Fore.LIGHTYELLOW_EX + "1. Create Tutor")
+        print(Fore.LIGHTCYAN_EX + "2. Delete Tutor")
+        print(Fore.LIGHTYELLOW_EX + "3. Create Receptionist")
+        print(Fore.LIGHTCYAN_EX + "4. Delete Receptionist")
+        print(Fore.LIGHTYELLOW_EX+ "5. Create Admin")
+        print(Fore.LIGHTCYAN_EX + "6. Delete Admin")
+        print(Fore.LIGHTYELLOW_EX + "7. View Income Report")
+        print(Fore.LIGHTCYAN_EX + "8. Update Admin Profile")
+        print(Fore.LIGHTYELLOW_EX + "9. Exit")
+        
+        choice = input(Fore.LIGHTMAGENTA_EX + "Enter choice: ")
+        if choice == "1":
+            create_tutor()
+        elif choice == "2":
+            delete_tutor()
+        elif choice == "3":
+            create_receptionist()
+        elif choice == "4":
+            delete_receptionist()
+        elif choice == "5":
+            create_admin()
+        elif choice == "6":
+            delete_admin()
+        elif choice == "7":
+            view_income_report()
+        elif choice == "8":
+            update_admin_profile()
+        elif choice == "9":
+            print(Fore.CYAN + "Exiting Admin Menu.")
+            break
+        else:
+            print("Invalid choice. Try again.")
+
+
+
+
+#------------------------------------------- END ADMIN PART-------------------------------------------------------------------
+
+
+##### RECEPTIONIST PART #####
+
+def receptionist_login():
+    print("\033[1m\n------- Receptionist Login -------\033[0m")
+    attempts = 3 # 3 login attempts
+
+    while attempts > 0:
+        username = input("Enter Receptionist Name: ")
+        password = pwinput.pwinput("Enter Password: ", mask='*') # Additional features: Hidden password with *
+
+        #Receptionists credentials
+        receptionists = load_data(receptionists_file)
+        for entry in receptionists:
+            if len(entry) != 3:  
+                continue
+            receptionist, passw, role = entry
+            if username == receptionist and password == passw:
+                print(Fore.GREEN + f"Login Successful! Welcome, {role}.")
+                return role
+            
+        #If login unsuccessful, decrease attempts
+        attempts -= 1
+        print(Fore.RED + f"Invalid credentials. {attempts} attempts left.")
+
+    print(Fore.LIGHTBLACK_EX + "Too many failed attempts. Exiting...")
+    return None
+
+#Register a student
+def register_student():
+    name = input(Fore.MAGENTA + "Enter Student Name: ")
+
+    # Check if student already exists
+    students = load_data(students_file)
+    if any( s[0] == name for s in students):
+        print(Fore.RED + "\n❌ Student already exists.")
+        return
+    Username = input(Fore.MAGENTA + "Enter Username: ")
+    password = input(Fore.MAGENTA + "Enter Password: ")
+    ic_number = input(Fore.MAGENTA + "Enter IC/Passport Number: ")
+    email = input(Fore.MAGENTA + "Enter email: ")
+    contact = input(Fore.MAGENTA + "Enter contact number: ")
+    address = input(Fore.MAGENTA + "Enter address: ")
+    level = input(Fore.MAGENTA + "Enter level (e.g., Form 1-5): ")
+    subjects = []
+    for _ in range(3): #Enroll in up to 3 subjects
+        subject = input(Fore.MAGENTA + f"Enter subject {_+1}: ")
+        if subject:
+            subjects.append(subject)
+        else:
+            break
+    month = input(Fore.MAGENTA + "Enter month of enrolment: ")
+
+    # Additional features: Progress bar
+    print(Fore.CYAN + "\nSaving student data...")
+    for _ in tqdm(range(5), desc="Processing", unit="step"):
+        time.sleep(3.0)  # simulate saving
+
+    students.append([name, Username, password, ic_number, email, contact, address, level, ';'.join(subjects), month])
+    save_data(students_file, students)
+    print(Fore.GREEN + "Student registered successfully.")
+
+#View subject enrollment request
+def view_request():
+    print("\033[1m\n-------- 🗳️  Pending Requests --------\033[0m")
+    print(Fore.CYAN + "\nLoading requests...")
+    for _ in tqdm(range(5), desc="Fetching", unit="records"):
+        time.sleep(3.0)
+    request = load_data(change_requests_file)
+    pending_requests = []
+
+    for req in request: 
+        if len(req) < 6:
+            continue
+        if req[5] == "Pending":
+            pending_requests.append(req)
+            # Add a blank line before each new student entry
+            print("\n" + "-" * 40) #Separator line
+
+            print(f"Student Name: {req[0]}")
+            print(f"Student ID: {req[1]}")
+
+            if req[3] != "None" and req[4] != "None": 
+                print(f"Change: {req[3]} → {req[4]}")
+            else:
+                if req[3] == "None":
+                    print(f"Subject to Add: {req[4]}")
+                if req[4] == "None":
+                    print(f"Subject to Remove: {req[3]}")
+
+            print() # Add blank line after each student
+
+
+# Update subject enrollment of a student
+def update_subject_enrollment():
+    print("\033[1m===== Update Subject Enrollment =====\033[0m")
+    ic_number = input("Enter IC/Passport number of the student: ")
+    students = load_data(students_file)
+    requests = load_data(change_requests_file)
+
+    students = [student for student in students if not student[0].startswith('#')]
+    requests = [req for req in requests if not req[0].startswith('#')]
+    found = False
+    target_student = None # To store the matched student
+
+    for student in students:
+        if student[3] == ic_number:
+            found = True
+            target_student = student
+            current_subjects = student[8].split(';')
+            print(f"Current subjects: {';'.join(current_subjects)}")
+    
+            #Accept new subjects
+            new_subjects = []
+            for i in range(3):  # Enroll in up to 3 subjects
+                subject = input(f"Enter new subject {i+1} (or leave blank to skip): ")
+                if subject:
+                    new_subjects.append(subject)
+                else:
+                    break
+            student[8] = ';'.join(new_subjects)
+            print(Fore.CYAN + "\nUpdating subjects...")
+            for i in tqdm(range(3), desc="Subject Entry", unit="subject"):
+                time.sleep(3.0)
+            break # Stop once found and updated the student
+
+    if not found:
+        print(Fore.RED + "Student not found.")
+        return
+
+    # If found the student, update request status
+    for req in requests:
+        if req[0] == target_student[0] and req[5] == "Pending":
+            req[5] = "Completed"
+            print(Fore.GREEN + "Request marked as completed.")
+            break # Exit loop after updating the student successfully
+            
+    # Save changes
+    save_data(students_file, students)
+    save_data(change_requests_file, requests)
+    print(Fore.GREEN + "Subject enrollment updated successfully.")
+        
+
+# Accept payment from a student and generate receipt
+def accept_payment():
+    print("\033[1m==== Accept Payment 💵 ====\33[0m")
+    ic_number = input("Enter IC/Passport number of the student: ")
+    students = load_data(students_file)
+    fees = load_data(class_information_file)
+
+    # Skip header row in classinformation.txt
+    fees = [fee for fee in fees if not fee[0].startswith('#')]
+
+    # Find student
+    for student in students:
+        if student[3] == ic_number:
+            # Check payment status
+            if len(student) > 10 and student[10] == "Paid": # Check student length
+                print("This student has already paid.")
+                return
+            
+            #Calculate total amount
+            total = 0
+            level = (f"{student[7]}")
+            subjects = [s.strip() for s in student[8].split(';')] # Trim whitespaces
+
+            for fee in fees:
+                if fee[0].strip() in subjects and fee[2].strip() == level.strip():
+                    total += int(fee[3][2:]) # Extract RM value
+
+            print(f"\nTotal Amount Due: RM{total}")
+            confirm = input("Confirm full payment? (Yes/No): ")
+
+            if confirm == "Y" or confirm == "y":
+                # Ensure index 10 exists
+                while len(student) <= 10: # While length is 10 or less
+                    student.append("")   # Add empty field
+                student[10] = "Paid"  # Index 10 is set
+                
+                #Generate receipt
+
+                print("\n══════════════════════════════════════════════════════════════════════")
+                print("║                   📚 BRILLIANT TUITION CENTRE 📚                   ║")
+                print("----------------------------------------------------------------------")
+                print(f" {'RECEIPT':^68} ")
+                print("----------------------------------------------------------------------")
+                print(f" Name:        {student[0]:<36} ")
+                print(f" IC/Passport: {student[3]:<36} ")
+                print(f" Level:       {student[7]:<36} ")
+                print("----------------------------------------------------------------------")
+                print(f" Subject:  {', '.join(subjects)}")
+                print("----------------------------------------------------------------------")
+                print(f" Amount Paid: RM{total:<27,.2f} ")
+                print(f" Payment Status: {Fore.GREEN + 'PAID ✅':<12} ")
+                print("----------------------------------------------------------------------")
+               
+                
+                # Save changes
+                save_data(students_file, students)
+                print(" Payment recorded successfully! ")
+            else:
+                print("Payment cancelled")
+                return
+            return
+           
+    print("Student not found.")
+
+# Delete a student who has completed their studies
+def delete_student():
+    ic_passport = input("Enter IC/Passport number of the student to delete: ")
+    students = load_data(students_file)
+
+    if not any(student[3] == ic_passport for student in students):
+        print("Student not found.")
+        return
+    
+    students = [student for student in students if student[3] != ic_passport]
+    save_data(students_file, students)
+    print(Fore.GREEN + "Student deleted successfully.")
+
+# Additional features: View list of registered students
+def list_all_students():
+    students = load_data(students_file)
+    print("\033[1m\n-------- 📋 Registered Students --------\033[0m")
+    for i, student in enumerate(students, start=1):
+        print(f"{i}. {student[0]} - {student[3]} - Level: {student[7]} - Subjects: {student[8]}")
+
+# Update receptionist profile
+def update_receptionist_profile():
+    receptionists = load_data(receptionists_file)
+    print("Current Receptionists: ")
+    for i, receptionist in enumerate(receptionists):
+        print(f"{i+1}. {receptionist[0]}")
+
+    choice = int(input("Enter the number of the receptionist to update: ")) - 1
+    if 0 <= choice < len(receptionists):
+            new_username = input("Enter new username: ")
+            new_password = input("Enter new password: ")
+            receptionists[choice] = [new_username, new_password, "Receptionist"]
+            save_data(receptionists_file, receptionists)
+            print(Fore.GREEN + "Profile updated successfully.")
+    else:
+        print(Fore.RED + "Invalid choice.")
+
+#Receptionist Menu
+def receptionist_menu():
+    if not receptionist_login():
+        return
+    while True: 
+        print("\033[1m\n======== Receptionist Menu ========\033[0m")
+        print("1. Register Student")
+        print("2. View subject enrollment request")
+        print("3. Update Subject Enrollment")
+        print("4. Accept Payment")
+        print("5. Delete Students")
+        print("6. View All Registered Students")
+        print("7. Update Receptionist Profile")
+        print("8. About / Credits")
+        print("9. Logout")
+
+        choice = input("Enter Your Choice: ")
+
+        if choice == "1":
+            register_student()
+        elif choice == "2":
+            view_request()
+        elif choice == "3":
+            update_subject_enrollment()
+        elif choice == "4":
+            accept_payment()
+        elif choice == "5":
+            delete_student()
+        elif choice == "6":
+            list_all_students()
+        elif choice == "7":
+            update_receptionist_profile()
+        elif choice == "8": 
+            show_credits() 
+        elif choice == "9":
+            print("Logging Out Receptionist Menu...")
+            break
+        else:
+            print(Fore.RED + "Invalid choice. Try again.")
+
+
+
+
+
+##### END RECEPTIONIST PART #####
+
+
+##### TUTOR PART #####
+def tutor_login():
+    print("\n--- Tutor Login ---")
+    attempts = 3
+    
+    while attempts > 0:
+        username = input("Username: ")
+        password = input("Password: ")
+        
+        tutors = load_data(tutors_file)
+        for tutor in tutors:
+            if username == tutor[0] and password == tutor[1]:
+                print(f"\nWelcome {tutor[0]} ({tutor[3]} Tutor)!")
+                return tutor  # Return tutor's data
+        
+        attempts -= 1
+        print(f"Invalid login. {attempts} attempts left.")
+    
+    print("Too many failed attempts.")
+    return None
+
+def view_my_classes(tutor):
+    classes = load_data(class_information_file)
+    print(f"\nYour Classes ({tutor[3]}):")
+    print("----------------------------------------")
+    print(f"{'Level':<10} {'Schedule':<20} {'Classroom':<15} {'Fee':<10}")
+    print("----------------------------------------")
+    
+    found = False
+    for cls in classes:
+        if cls[1] == tutor[0]:  # If tutor name matches
+            print(f"{cls[2]:<10} {cls[4]:<20} {cls[5]:<15} {cls[3]:<10}")
+            found = True
+    
+    if not found:
+        print("No classes assigned yet!")
+
+def add_class(tutor):
+    classes = load_data(class_information_file)
+    print("\nAdd New Class")
+    
+    level = input("Form level (e.g. Form 1): ")
+    fee = input("Class fee (e.g. RM70): ")
+    schedule = input("Schedule (e.g. Mon 9:00 AM-10:30 AM): ")
+    classroom = input("Classroom: ")
+    
+    new_class = [tutor[3], tutor[0], level, fee, schedule, classroom]
+    classes.append(new_class)
+    save_data(class_information_file, classes)
+    print("\nClass added successfully!")
+
+def update_class(tutor):
+    classes = load_data(class_information_file)
+    my_classes = [c for c in classes if c[1] == tutor[0]]
+    
+    if not my_classes:
+        print("\nYou have no classes to update!")
+        return
+    
+    print("\nYour Classes:")
+    for i, cls in enumerate(my_classes):
+        print(f"{i+1}. {cls[2]} - {cls[4]} ({cls[5]}) - {cls[3]}")
+    
+    try:
+        choice = int(input("\nSelect class to update (0 to cancel): ")) - 1
+        if 0 <= choice < len(my_classes):
+            print("\nLeave blank to keep current value")
+            new_fee = input(f"New fee [{my_classes[choice][3]}]: ") or my_classes[choice][3]
+            new_schedule = input(f"New schedule [{my_classes[choice][4]}]: ") or my_classes[choice][4]
+            new_room = input(f"New classroom [{my_classes[choice][5]}]: ") or my_classes[choice][5]
+            
+            # Update the class
+            for cls in classes:
+                if cls[1] == tutor[0] and cls[4] == my_classes[choice][4]:
+                    cls[3] = new_fee
+                    cls[4] = new_schedule
+                    cls[5] = new_room
+                    break
+            
+            save_data(class_information_file, classes)
+            print("\nClass updated successfully!")
+    except ValueError:
+        print("Please enter a valid number.")
+
+def delete_class(tutor):
+    classes = load_data(class_information_file)
+    my_classes = [c for c in classes if c[1] == tutor[0]]
+    
+    if not my_classes:
+        print("\nYou have no classes to delete!")
+        return
+    
+    print("\nYour Classes:")
+    for i, cls in enumerate(my_classes):
+        print(f"{i+1}. {cls[2]} - {cls[4]} ({cls[5]}) - {cls[3]}")
+    
+    try:
+        choice = int(input("\nSelect class to delete (0 to cancel): ")) - 1
+        if 0 <= choice < len(my_classes):
+            confirm = input(f"Are you sure you want to delete {my_classes[choice][2]}? (Y/N): ").upper()
+            if confirm == 'Y':
+                # Remove the class from the main list
+                for i, cls in enumerate(classes):
+                    if cls[1] == tutor[0] and cls[4] == my_classes[choice][4]:
+                        del classes[i]
+                        break
+                
+                save_data(class_information_file, classes)
+                print("\nClass deleted successfully!")
+            else:
+                print("\nDeletion cancelled.")
+    except ValueError:
+        print("Please enter a valid number.")
+
+def view_enrolled_students(tutor):
+    classes = load_data(class_information_file)
+    students = load_data(students_file)
+    
+    my_classes = [c for c in classes if c[1] == tutor[0]]
+    
+    if not my_classes:
+        print("\nYou have no classes assigned!")
+        return
+    
+    print("\nSelect a class to view enrolled students:")
+    for i, cls in enumerate(my_classes):
+        print(f"{i+1}. {cls[2]} - {cls[4]} ({cls[5]})")
+    
+    try:
+        choice = int(input("\nEnter class number (0 to cancel): ")) - 1
+        if 0 <= choice < len(my_classes):
+            selected_class = my_classes[choice]
+            enrolled_students = []
+            
+            # Find students enrolled in this class
+            for student in students:
+                if 'classes' in student and selected_class[2] in student['classes']:
+                    enrolled_students.append(student)
+            
+            print(f"\nStudents enrolled in {selected_class[2]} ({selected_class[4]}):")
+            print("----------------------------------------")
+            print(f"{'ID':<10} {'Name':<20} {'Phone':<15}")
+            print("----------------------------------------")
+            
+            if enrolled_students:
+                for student in enrolled_students:
+                    print(f"{student.get('id',''):<10} {student.get('name',''):<20} {student.get('phone',''):<15}")
+            else:
+                print("No students enrolled yet.")
+    except ValueError:
+        print("Please enter a valid number.")
+
+def update_password(tutor):
+    tutors = load_data(tutors_file)
+    
+    new_pass = input("\nNew password: ")
+    confirm_pass = input("Confirm password: ")
+    
+    if new_pass == confirm_pass:
+        for t in tutors:
+            if t[0] == tutor[0]:
+                t[1] = new_pass
+                break
+        save_data(tutors_file, tutors)
+        print("\nPassword updated successfully!")
+    else:
+        print("\nPasswords don't match!")
+
+def tutor_menu():
+    tutor = tutor_login()
+    if not tutor:
+        return
+    
+    while True:
+        print("\nTUTOR MENU")
+        print("1. View My Classes")
+        print("2. Add Class")
+        print("3. Update Class")
+        print("4. Delete Class")
+        print("5. View Enrolled Students")
+        print("6. Change Password")
+        print("7. Logout")
+        
+        choice = input("Enter choice (1-7): ")
+        
+        if choice == "1":
+            view_my_classes(tutor)
+        elif choice == "2":
+            add_class(tutor)
+        elif choice == "3":
+            update_class(tutor)
+        elif choice == "4":
+            delete_class(tutor)
+        elif choice == "5":
+            view_enrolled_students(tutor)
+        elif choice == "6":
+            update_password(tutor)
+        elif choice == "7":
+            print("\nLogging out... Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+
+
+
+
+
+
+
+# File and security settings
+LOGIN_LOGS_FILE = "login_logs.txt"
+MAX_ATTEMPTS = 3
+LOCKOUT_TIME = 10  
+
+def log_activity(username, action):
+    """Record login/logout activities to a log file"""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    log_entry = f"{timestamp} - {username} - {action}\n"
+    
+    # Create header if file doesn't exist
+    if not os.path.exists(LOGIN_LOGS_FILE):
+        with open(LOGIN_LOGS_FILE, 'w') as f:
+            f.write("Timestamp - Username - Action\n")
+    
+    # Append the new log entry
+    with open(LOGIN_LOGS_FILE, 'a') as f:
+        f.write(log_entry)
+
+def students_login():
+    print(Fore.LIGHTGREEN_EX + "\n--- Student Login ---")
+    attempts = MAX_ATTEMPTS
+    last_failed_time = None
+    
+    while attempts > 0:
+        # Check if we need to enforce lockout (only after 3 failed attempts)
+        if attempts == 0 and last_failed_time and (datetime.now() - last_failed_time).seconds < LOCKOUT_TIME:
+            remaining = LOCKOUT_TIME - (datetime.now() - last_failed_time).seconds
+            print(Fore.RED + f"Too many failed attempts. Please wait {remaining} seconds before trying again.")
+            time.sleep(remaining)
+            attempts = MAX_ATTEMPTS  # Reset attempts after lockout
+            continue
+            
+        username = input(Fore.YELLOW + "Enter student username: ").strip()
+        password = pwinput.pwinput(Fore.YELLOW + "Enter Password: ", mask='*').strip()
+
+        # Verify credentials
+        students = load_data(students_file)
+        for student in students:
+            if len(student) >= 3:
+                if username == student[1] and password == student[2]:
+                    print(Fore.GREEN + f"Login Successful! Welcome, {student[0]}.")
+                    log_activity(username, "Login successful")
+                    return student
+
+        # Handle failed attempt
+        attempts -= 1
+        last_failed_time = datetime.now()
+        
+        if attempts > 0:
+            print(Fore.RED + f"Invalid credentials. {attempts} attempts left.")
+            log_activity(username, "Failed login attempt")
+        else:
+            print(Fore.RED + "⚠ Too many failed attempts. Account temporarily locked.")
+            log_activity(username, "Account locked - too many failed attempts")
+            # Only show wait message after 3 failures
+            remaining = LOCKOUT_TIME
+            print(Fore.RED + f"Please wait {remaining} seconds before trying again.")
+            time.sleep(remaining)
+            attempts = MAX_ATTEMPTS  # Reset attempts after lockout
+
+    return None
+
+
+# View the schedule of his/her classes 
+def view_student_schedule(student_name, student_level, student_subjects):
+    """View class schedule for the student"""
+    classes = load_data("class_information.txt")
+    
+    print(Fore.LIGHTBLUE_EX + f"\n📅 Class Schedule for {student_name} (Level: {student_level}) 📅")
+    print(Fore.LIGHTMAGENTA_EX + "=" * 60)
+    found = False 
+    
+    student_level_norm = student_level.replace(" ", "")
+    
+    for cls in classes:
+        if len(cls) < 6 or cls[0].startswith('#'):
+            continue
+            
+        subject, tutor, level, fee, schedule, classroom = cls[:6]
+        class_level_norm = level.strip().replace(" ", "")
+        
+        if (class_level_norm == student_level_norm and 
+            subject.strip() in [s.strip() for s in student_subjects]):
+            found = True
+            print(Fore.LIGHTCYAN_EX + f"Subject   : {subject}")
+            print(Fore.LIGHTBLACK_EX + f"Tutor     : {tutor}")
+            print(Fore.LIGHTWHITE_EX + f"Level     : {level}")
+            print(Fore.LIGHTCYAN_EX + f"Fee       : {fee}")
+            print(Fore.LIGHTBLACK_EX + f"Schedule  : {schedule}")
+            print(Fore.LIGHTWHITE_EX + f"Classroom : {classroom}")
+            print(Fore.LIGHTMAGENTA_EX + "-" * 60)
+    
+    if not found:
+        print(Fore.RED + "\nNo matching classes found.")
+        input(Fore.GREEN + "\nPress Enter to continue...")
+
+# Send a request to the receptionist to change the subject enrollment
+def send_change_request(student):
+    """Send subject change request to receptionist"""
+    print(Fore.LIGHTGREEN_EX + "\n📝 Subject Change Request")
+    current_subjects = student[8].split(';')
+    print(Fore.LIGHTRED_EX + f"Your current subjects: {', '.join(current_subjects)}")
+    print(Fore.LIGHTMAGENTA_EX + "=" * 60)
+    subject_to_remove = input("Enter subject to remove (or leave blank): ").strip()
+    subject_to_add = input("Enter subject to add (or leave blank): ").strip()
+
+    if not subject_to_remove and not subject_to_add:
+        print(Fore.LIGHTRED_EX + "❌ No changes requested.")
+        return
+
+    if subject_to_remove and subject_to_remove not in current_subjects:
+        print(Fore.LIGHTRED_EX + f"❌ You are not enrolled in {subject_to_remove}.")
+        return
+
+    new_count = len(current_subjects)
+    if subject_to_remove:
+        new_count -= 1
+    if subject_to_add:
+        new_count += 1
+
+    if new_count > 3:
+        print(Fore.LIGHTRED_EX + "❌ You cannot have more than 3 subjects.")
+        return
+
+    request_data = {
+        'student_name': student[0],
+        'student_id': student[1],
+        'current_subjects': ';'.join(current_subjects),
+        'remove': subject_to_remove if subject_to_remove else "None",
+        'add': subject_to_add if subject_to_add else "None",
+        'status': 'Pending'
+    }
+
+    requests = load_data("change_requests.txt")
+    requests.append([
+        request_data['student_name'],
+        request_data['student_id'],
+        request_data['current_subjects'],
+        request_data['remove'],
+        request_data['add'],
+        request_data['status']
+    ])
+    save_data("change_requests.txt", requests)
+
+    print(Fore.LIGHTGREEN_EX + "\n✅ Request submitted to receptionist!")
+    input(Fore.GREEN +  "\nPress Enter to continue...")
+
+# Delete the request (which is still pending) sent to the receptionist to change the subject.
+def delete_pending_request(student):
+    """Allow students to delete their own pending requests"""
+    print(Fore.LIGHTGREEN_EX + "\n 🗑️ Delete Pending Request")
+    print(Fore.LIGHTMAGENTA_EX + "=" * 60)
+    
+    # Load all requests
+    requests = load_data("change_requests.txt")
+    student_id = student[1]
+    
+    # Filter only this student's pending requests
+    pending_requests = [
+        (i, req) for i, req in enumerate(requests)
+        if len(req) > 5 and req[1] == student_id and req[5] == "Pending"
+    ]
+    
+    if not pending_requests:
+        print(Fore.YELLOW + "You have no pending requests to delete.")
+        input(Fore.GREEN + "\nPress Enter to continue...")
+        return
+    
+    # Display pending requests
+    print(Fore.LIGHTCYAN_EX + "\nYour Pending Requests:")
+    for idx, (i, req) in enumerate(pending_requests, 1):
+        print(f"{idx}. Request to remove '{req[3]}' and add '{req[4]}'")
+    
+    try:
+        choice = int(input("\nEnter request number to delete (0 to cancel): "))
+        if choice == 0:
+            return
+        if 1 <= choice <= len(pending_requests):
+            # Get the actual request index in the full list
+            req_index, request = pending_requests[choice-1]
+            
+            # Remove the request
+            del requests[req_index]
+            
+            # Save changes
+            save_data("change_requests.txt", requests)
+            
+            print(Fore.GREEN + "\n✓ Request deleted successfully!")
+        else:
+            print(Fore.RED + "Invalid selection")
+    except ValueError:
+        print(Fore.RED + "Please enter a valid number")
+    
+    input(Fore.GREEN + "\nPress Enter to continue...")
+
+# View payment status with the total balance that needs to be paid, if any.
+def view_payment_status(student):
+    """View payment status and outstanding balance"""
+    print(Fore.LIGHTGREEN_EX + "\n💰 Payment Status")
+    print(Fore.LIGHTMAGENTA_EX + "=" * 60)
+    
+    student_name = student[0]
+    payment_status = student[10] if len(student) > 10 else "Unknown"
+    enrolled_subjects = [subj.strip() for subj in student[8].split(';')]
+    student_level = student[7]
+    
+    # Load subject fees from classinformation.txt
+    payments = load_data(class_information_file)
+    
+    # Calculate total fees based on actual class information
+    total_fees = 0
+    subject_details = []
+    
+    for subject in enrolled_subjects:
+        # Find the matching subject and level in classinformation
+        for payment in payments:
+            if payment[0] == subject and payment[2] == student_level:
+                try:
+                    fee = int(payment[3].replace("RM", ""))
+                    total_fees += fee
+                    subject_details.append((subject, fee))
+                    break
+                except (ValueError, IndexError):
+                    subject_details.append((subject, 0))
+                    break
+    
+    balance = total_fees
+    paid_amount = 0 if payment_status != "Paid" else total_fees
+    
+    print(Fore.LIGHTCYAN_EX + f"Student: {student_name}")
+    print(Fore.LIGHTBLACK_EX + f"Level: {student_level}")
+    print(Fore.LIGHTWHITE_EX + f"\nEnrolled Subjects ({len(enrolled_subjects)}):")
+    
+    for subject, fee in subject_details:
+        print(f"  - {subject} (RM{fee})")
+    
+    print(Fore.LIGHTBLACK_EX + "\nPayment Summary:")
+    print(Fore.LIGHTBLACK_EX + f"Total Fees         : RM{total_fees}")
+    
+    if payment_status == "Paid":
+        print(Fore.GREEN + f"Amount Paid        : RM{paid_amount}")
+        print(Fore.GREEN + f"Outstanding Balance: RM{0}")
+        print(Fore.WHITE + "\n✅ Your payment is fully paid!")
+    else:
+        print(Fore.RED + f"Amount Paid        : RM{paid_amount}")
+        print(Fore.RED + f"Outstanding Balance: RM{balance}")
+        print(Fore.RED + f"\nYour outstanding balance is RM{balance} needs to be paid")
+    
+    input(Fore.GREEN + "\nPress Enter to return to menu...")
+
+def update_student_profile(student):
+    """Update student profile information with immediate changes"""
+    print(Fore.LIGHTGREEN_EX + "\n🔄 Update Your Profile")
+    print(Fore.LIGHTMAGENTA_EX + "=" * 60)
+
+    # Display current profile with correct numbering
+    print("\nCurrent Profile:")
+    print(Fore.LIGHTBLACK_EX + f"1. Full Name             : {student[0]}")
+    print(Fore.LIGHTBLUE_EX + f"2. Username              : {student[1]}")
+    print(Fore.LIGHTCYAN_EX + f"3. Password              : {'*' * len(student[2])}")
+    print(Fore.LIGHTGREEN_EX + f"4. IC Number             : {student[3]} (Cannot be changed)")
+    print(Fore.LIGHTMAGENTA_EX + f"5. Email                 : {student[4]}") 
+    print(Fore.LIGHTRED_EX + f"6. Contact Number        : {student[5]}") 
+    print(Fore.LIGHTWHITE_EX + f"7. Address               : {student[6]}")
+    print(Fore.LIGHTYELLOW_EX + f"8. Level                 : {student[7]} (Cannot be changed)")
+    print(Fore.YELLOW + f"9. Month                 : {student[9]} (Cannot be changed)")
+    print(Fore.WHITE + f"10. Subject              : {student[8]} (Cannot be changed)")
+    print(Fore.YELLOW + f"11. Payment status       : {student[10]} (Cannot be changed)")
+
+
+    all_students = load_data(students_file)
+    old_username = student[1]  # Save old username before any update
+
+    editable_fields = {
+        1: (0, "Full Name"),
+        2: (1, "Username"),
+        3: (2, "Password"),
+        5: (4, "Email"),
+        6: (5, "Contact Number"),
+        7: (6, "Address")
+    }
+
+    while True:
+        try:
+            field = int(input("\nEnter field number to update (1-3, 5-7, 0 to cancel): "))
+            if field == 0:
+                print(Fore.RED + "Update cancelled.")
+                return
+
+            if field not in editable_fields:
+                print(Fore.RED + "❌ This field cannot be changed.")
+                continue
+
+            field_index, field_name = editable_fields[field]
+
+            if field == 3:  # Password change
+                current_password = input("Enter your current password: ").strip()
+                if current_password != student[2]:
+                    print(Fore.RED + "❌ Current password is incorrect!")
+                    continue
+
+                while True:
+                    new_password = input("Enter new password (min 8 characters): ").strip()
+                    confirm_password = input("Confirm new password: ").strip()
+
+                    if len(new_password) < 8:
+                        print(Fore.YELLOW + "❌ Password must be at least 8 characters long.")
+                        continue
+                    if new_password != confirm_password:
+                        print(Fore.YELLOW + "❌ Passwords do not match.")
+                        continue
+                    break
+
+                student[2] = new_password
+                print(Fore.MAGENTA + "✅ Password updated successfully!")
+                log_activity(old_username, "Password changed")
+
+            else:  # Other fields
+                while True:
+                    new_value = input(f"Enter new {field_name}: ").strip()
+
+                    if field == 1:  # Full Name
+                        if not new_value:
+                            print(Fore.RED + "❌ Name cannot be empty.")
+                            continue
+
+                    elif field == 2:  # Username
+                        if not new_value:
+                            print(Fore.RED + "❌ Username cannot be empty.")
+                            continue
+                        if any(s[1] == new_value and s[1] != student[1] for s in all_students):
+                            print(Fore.RED + "❌ Username already exists.")
+                            continue
+
+                    elif field == 5:  # Email
+                        if "@" not in new_value or "." not in new_value:
+                            print(Fore.RED + "❌ Please enter a valid email address.")
+                            continue
+
+                    elif field == 6:  # Contact Number
+                        if not new_value.isdigit() or len(new_value) < 10:
+                            print(Fore.RED + "❌ Please enter a valid phone number.")
+                            continue
+
+                    elif field == 7:  # Address
+                        if len(new_value) < 10:
+                            print(Fore.RED + "❌ Address seems too short.")
+                            continue
+
+                    break  # Validation passed
+
+                student[field_index] = new_value
+                print(Fore.CYAN + f"✅ {field_name} updated successfully!")
+                log_activity(old_username, f"Updated {field_name.lower()}")
+
+                if field == 2:  # Username changed
+                    update_username_references(old_username, new_value)
+
+            # Immediate save with correct user match using old_username
+            for i, s in enumerate(all_students):
+                if s[1] == old_username:
+                    all_students[i] = student
+                    save_data(students_file, all_students)
+                    print(Fore.GREEN + "Changes saved successfully!")
+                    break
+
+            input(Fore.GREEN + "\nPress Enter to continue...")
+            return  # Exit after one update
+
+        except ValueError:
+            print(Fore.RED + "❌ Please enter a valid number.")
+
+
+def update_username_references(old_username, new_username):
+    """Update username references in other files"""
+    # Update change_requests.txt
+    change_requests = load_data(change_requests_file)
+    for request in change_requests:
+        if request[1] == old_username:
+            request[1] = new_username
+    save_data(change_requests_file, change_requests)
+
+    # Update login_logs.txt
+    if os.path.exists(LOGIN_LOGS_FILE):
+        with open(LOGIN_LOGS_FILE, 'r') as f:
+            logs = f.readlines()
+
+        with open(LOGIN_LOGS_FILE, 'w') as f:
+            for line in logs:
+                if old_username in line:
+                    line = line.replace(old_username, new_username)
+                f.write(line)
+
+            
+#Main Logic
+def student_menu():
+    if __name__ == "__main__":
+        student = students_login()
+    if student:
+            while True:
+                print(Fore.LIGHTMAGENTA_EX + "\nStudent Menu:")
+                print(Fore.LIGHTBLACK_EX + "1. View Schedule")
+                print(Fore.BLACK + "2. Request Subject Change")
+                print(Fore.LIGHTBLUE_EX + "3. Delete Pending Request")
+                print(Fore.BLUE + "4. View Payment Status")
+                print(Fore.LIGHTYELLOW_EX + "5. Update Profile")
+                print(Fore.YELLOW + "6. Logout")
+                
+                choice = input(Fore.GREEN + "Enter your choice: ")
+                
+                if choice == "1":
+                    view_student_schedule(student[0], student[7], student[8].split(';'))
+                elif choice == "2":
+                    send_change_request(student)
+                elif choice == "3":
+                    delete_pending_request(student)
+                elif choice == "4":
+                    view_payment_status(student)
+                elif choice == "5":
+                    update_student_profile(student)
+                elif choice == "6":
+                    print(Fore.YELLOW + "Student account logging out...")
+                    log_activity(student[1], "Logout")
+                    break
+                else:
+                    print(Fore.RED + "Invalid choice. Try again.")
+
+
+
+def auto_login_system():
+    while True:
+        print(Fore.LIGHTGREEN_EX + "\n--- Brilliant Tuition Centre Login ---")
+        username = input(Fore.YELLOW + "Enter your username: ").strip()
+        password = pwinput.pwinput(Fore.YELLOW + "Enter your password: ", mask='*').strip()
+
+        # Check in all role files
+        admins = load_data(admin_file)
+        receptionists = load_data(receptionists_file)
+        tutors = load_data(tutors_file)
+        students = load_data(students_file)
+
+        # Check admin
+        for admin in admins:
+            if len(admin) >= 2 and username == admin[0] and password == admin[1]:
+                print(Fore.GREEN + f"\nWelcome Admin: {admin[0]}")
+                admin_menu()
+                return
+
+        # Check receptionist
+        for receptionist in receptionists:
+            if len(receptionist) >= 2 and username == receptionist[0] and password == receptionist[1]:
+                print(Fore.GREEN + f"\nWelcome Receptionist: {receptionist[0]}")
+                receptionist_menu()
+                return
+
+        # Check tutor
+        for tutor in tutors:
+            if len(tutor) >= 2 and username == tutor[0] and password == tutor[1]:
+                print(Fore.GREEN + f"\nWelcome Tutor: {tutor[0]}")
+                tutor_menu()
+                return
+
+        # Check student
+        for student in students:
+            if len(student) >= 3 and username == student[1] and password == student[2]:
+                print(Fore.GREEN + f"\nWelcome Student: {student[0]}")
+                student_menu()
+                return
+
+        print(Fore.RED + "\nInvalid credentials or role not found. Please try again.")
+        time.sleep(1)
+
+def main():
+    # Replace the original main() function with this
+    auto_login_system()
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,51 @@
+#Format: Subject,Tutor,Level,Fee,ClassSchedule,Classroom
+English,Mr.J,Form 1,RM70,Mon 9:00 AM-10:30 AM,Classroom A
+English,Mr.J,Form 2,RM75,Mon 11:00 AM-12:30 PM,Classroom A
+English,Mr.J,Form 3,RM80,Tue 9:00 AM-10:30 AM,Classroom B
+English,Mr.J,Form 4,RM85,Tue 11:00 AM-12:30 PM,Classroom B
+English,Mr.J,Form 5,RM90,Wed 9:00 AM-10:30 AM,Classroom C
+Bahasa Melayu,Mr.Q,Form 1,RM65,Mon 1:30 PM-3:00 PM,Classroom A
+Bahasa Melayu,Mr.Q,Form 2,RM70,Mon 3:45 PM-5:15 PM,Classroom A
+Bahasa Melayu,Mr.Q,Form 3,RM75,Tue 1:30 PM-3:00 PM,Classroom B
+Bahasa Melayu,Mr.Q,Form 4,RM80,Tue 3:45 PM-5:15 PM,Classroom B
+Bahasa Melayu,Mr.Q,Form 5,RM85,Wed 11:00 AM-12:30 PM,Classroom C
+Mathematics,Ms.Jesica,Form 1,RM75,Wed 1:30 PM-3:00 PM,Classroom A
+Mathematics,Ms.Jesica,Form 2,RM80,Wed 3:45 PM-5:15 PM,Classroom A
+Mathematics,Ms.Jesica,Form 3,RM85,Thu 9:00 AM-10:30 AM,Classroom B
+Mathematics,Ms.Jesica,Form 4,RM90,Thu 11:00 AM-12:30 PM,Classroom B
+Mathematics,Ms.Jesica,Form 5,RM95,Fri 9:00 AM-10:30 AM,Classroom C
+Science,Mr.Robin,Form 1,RM70,Thu 1:30 PM-3:00 PM,Classroom A
+Science,Mr.Robin,Form 2,RM75,Thu 3:45 PM-5:15 PM,Classroom A
+Science,Mr.Robin,Form 3,RM80,Fri 11:00 AM-12:30 PM,Classroom B
+Science,Mr.Robin,Form 4,RM85,Fri 1:30 PM-3:00 PM,Classroom B
+Science,Mr.Robin,Form 5,RM90,Sat 9:00 AM-10:30 AM,Classroom C
+Geographics,Ms.Caster,Form 1,RM65,Fri 3:45 PM-5:15 PM,Classroom A
+Geographics,Ms.Caster,Form 2,RM70,Sat 11:00 AM-12:30 PM,Classroom B
+Geographics,Ms.Caster,Form 3,RM75,Sat 1:30 PM-3:00 PM,Classroom C
+History,Mr.Alvin,Form 1,RM60,Mon 2:00 PM-3:30 PM,Classroom D
+History,Mr.Alvin,Form 2,RM65,Tue 2:00 PM-3:30 PM,Classroom D
+History,Mr.Alvin,Form 3,RM70,Wed 2:00 PM-3:30 PM,Classroom D
+History,Mr.Alvin,Form 4,RM75,Thu 2:00 PM-3:30 PM,Classroom D
+History,Mr.Alvin,Form 5,RM80,Fri 2:00 PM-3:30 PM,Classroom D
+Physics,Ms.Rachel,Form 4,RM90,Mon 3:45 PM-5:15 PM,Classroom E
+Physics,Ms.Rachel,Form 5,RM95,Tue 3:45 PM-5:15 PM,Classroom E
+Chemistry,Ms.Tan,Form 4,RM90,Wed 3:45 PM-5:15 PM,Classroom E
+Chemistry,Ms.Tan,Form 5,RM95,Thu 3:45 PM-5:15 PM,Classroom E
+Biology,Ms.Farah,Form 4,RM90,Fri 3:45 PM-5:15 PM,Classroom E
+Biology,Ms.Farah,Form 5,RM95,Sat 3:45 PM-5:15 PM,Classroom E
+Additional Mathematics,Mr.Lee,Form 4,RM95,Mon 11:00 AM-12:30 PM,Classroom F
+Additional Mathematics,Mr.Lee,Form 5,RM100,Tue 11:00 AM-12:30 PM,Classroom F
+Accounting,Ms.Siti,Form 4,RM85,Wed 11:00 AM-12:30 PM,Classroom F
+Accounting,Ms.Siti,Form 5,RM90,Thu 11:00 AM-12:30 PM,Classroom F
+Economics,Mr.Daniel,Form 4,RM80,Fri 11:00 AM-12:30 PM,Classroom F
+Economics,Mr.Daniel,Form 5,RM85,Sat 11:00 AM-12:30 PM,Classroom F
+Computer Science,Mrs.Wang,Form 4,RM85,Mon 1:30 PM-3:00 PM,Classroom G
+Computer Science,Mrs.Wang,Form 5,RM90,Tue 1:30 PM-3:00 PM,Classroom G
+Business,Mr.Adam,Form 4,RM80,Wed 1:30 PM-3:00 PM,Classroom G
+Business,Mr.Adam,Form 5,RM85,Thu 1:30 PM-3:00 PM,Classroom G
+Chinese,Ms.Mora,Form 1,RM65,Fri 1:30 PM-3:00 PM,Classroom G
+Chinese,Ms.Mora,Form 2,RM70,Sat 1:30 PM-3:00 PM,Classroom G
+Chinese,Ms.Mora,Form 3,RM75,Mon 9:00 AM-10:30 AM,Classroom H
+Chinese,Ms.Mora,Form 4,RM80,Tue 9:00 AM-10:30 AM,Classroom H
+Chinese,Ms.Mora,Form 5,RM85,Wed 9:00 AM-10:30 AM,Classroom H
+English,Mr.J,From1,RM700,Mon 11:00 AM-12:00 AM,Classroom F

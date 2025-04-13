@@ -1,0 +1,16 @@
+#Format: studentname, username, password, ic_number, email, contact, address, level, subjects, month, payment status
+Adam Tan,Adam_tan1,Adam@5678,010203-14-5678,adam.tan@gmail.com,01234559877,12 Jalan Ampang KL,Form 1,History;Geographics;Mathematics,Feb,Paid
+Sara Lim,sara_lim2,Sara@6789,020304-10-6789,sara.lim@gmail.com,0112233445,34 Taman Melati JB,Form 3,Mathematics;Chinese;Science,Feb,Paid
+Daniel Ng,daniel_ng3,Daniel@7890,030405-08-7890,daniel.ng@gmail.com,0165566778,56 Bukit Indah PG,Form 4,Bahasa Melayu;Additional Mathematics;Biology,Oct,Paid
+Aisha Wong,aisha_wong4,Aisha@8901,040506-07-8901,aisha.wong@gmail.com,0176677889,78 Jalan Meru Ipoh,Form 2,English;History;Mathematics,May,Paid
+Faris Lee,faris_lee5,Faris@9012,050607-12-9012,faris.lee@gmail.com,0176677889,78 Jalan Meru Ipoh,Form 2,History;Science;Mathematics,Feb,Paid
+Hana Ooi,hana_ooi6,Hana@2345,060708-05-2345,hana.ooi@gmail.com,0138899001,23 Jalan Gurney PG,Form 3,History;Chinese;English,Feb,Paid
+Kevin Chua,kevin_chua7,Kevin@3456,070809-03-3456,kevin.chua@gmail.com,0199988776,45 Taman Ria Shah Alam,Form 1,History;Bahasa Melayu;Chinese,Jan,Paid
+Lina Yap,lina_yap8,Lina@4567,080910-11-4567,lina.yap@gmail.com,0123344556,67 Jalan Bunga Seremban,Form 2,History;Chinese;English,Mar,Paid
+Rizal Chan,rizal_chan9,Rizal@5678,091011-06-5678,rizal.chan@email.com,0145566777,89 Bukit Mewah Kuantan,Form 1,History;Bahasa Melayu;English,Feb,Paid
+Emily Goh,emily_goh10,Emily@6789,101112-02-6789,emily.goh@gmail.com,0176677880,10 Taman Jaya Melaka,Form 5,Chemistry;Computer Science;English,Apr,Paid
+Hafiz Lau,hafiz_lau11,Hafiz@7890,111213-09-7890,hafiz.lau@gmail.com,0167788992,11 Jalan Besar JB,Form 4,Physics;Economics;Chinese,Mar,Paid
+Jessie Teh,jessie_teh12,Jessie@7890,121314-09-7890,jessie.teh@gmail.com,0188899003,12 Taman Aman Ipoh,Form 5,Accounting;Additional Mathematics;History,May,Paid
+Syafiq Lim,syafiq_lim13,Syafiq@9012,131415-04-9012,syafiq.lim@gmail.com,0199988774,13 Jalan Indah KL,Form 2,Mathematics;History;Chinese,Nov,Paid
+Nicole Tan,nicole_tan14,Nicole@0123,141516-10-0123,nicole.tan@gmail.com,0123344555,14 Bukit Damansara KL,Form 3,Geographics;Chinese;Bahasa Melayu,Jun,Paid
+Amir Koh,amir_koh15,Amir@1234,151617-08-1234,amir.koh@gmail.com,0112233446,15 Jalan Mawar Penang,Form 4,Computer Science;Chinese;Accounting,Jan,Paid
